@@ -13,6 +13,7 @@ jobs:
         run: |
           npm install
           npm run build
+          npm run no-jekyll
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@3.5.7
