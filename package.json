@@ -23,7 +23,7 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "no-jekyll": "touch public/.nojekyll"
+    "postbuild": "touch public/.nojekyll"
 
   },
   "devDependencies": {

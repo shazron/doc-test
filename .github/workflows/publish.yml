@@ -2,6 +2,9 @@ name: Build and Deploy
 on: [push]
 jobs:
   build-and-deploy:
+    env:
+      PATH_PREFIX: ${GITHUB_REPOSITORY#*/} # repo name, replaces `pathPrefix` value in our gatsby-config.js
+      PREFIX_PATHS: true # equivalent to --prefix-paths flag for 'gatsby build'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -13,8 +16,6 @@ jobs:
         run: |
           npm install
           npm run build
-          npm run no-jekyll
-          echo ${GITHUB_REPOSITORY#*/}
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@3.5.7
