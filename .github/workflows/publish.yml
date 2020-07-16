@@ -11,11 +11,13 @@ jobs:
         with:
           persist-credentials: false
       - name: Get repo name into env var
-        run: echo '::set-env name=PATH_PREFIX::/${GITHUB_REPOSITORY#*/}'
-      - name: Install and Build
+        run: echo ::set-env name=PATH_PREFIX::${GITHUB_REPOSITORY#*/}
+      - name: show env vars
         run: |
           echo 'PATH_PREFIX' $PATH_PREFIX
           echo 'PREFIX_PATHS' $PREFIX_PATHS
+      - name: Install and Build
+        run: |
           npm install
           npm run build
 
