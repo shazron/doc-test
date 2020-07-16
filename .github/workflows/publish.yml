@@ -14,6 +14,7 @@ jobs:
           npm install
           npm run build
           npm run no-jekyll
+          echo ${GITHUB_REPOSITORY#*/}
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@3.5.7
