@@ -3,7 +3,7 @@ on: [push]
 jobs:
   build-and-deploy:
     env:
-      PATH_PREFIX: ${GITHUB_REPOSITORY#*/} # repo name, replaces `pathPrefix` value in our gatsby-config.js
+      PATH_PREFIX: /${GITHUB_REPOSITORY#*/} # repo name, replaces `pathPrefix` value in our gatsby-config.js
       PREFIX_PATHS: true # equivalent to --prefix-paths flag for 'gatsby build'
     runs-on: ubuntu-latest
     steps:
@@ -14,6 +14,8 @@ jobs:
 
       - name: Install and Build
         run: |
+          echo 'PATH_PREFIX' ${PATH_PREFIX}
+          echo 'PREFIX_PATHS' ${PREFIX_PATHS}
           npm install
           npm run build
 
