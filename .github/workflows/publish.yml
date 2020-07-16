@@ -12,15 +12,14 @@ jobs:
           persist-credentials: false
       - name: Get repo name into env var
         run: echo ::set-env name=PATH_PREFIX::${GITHUB_REPOSITORY#*/}
-      - name: show env vars
+      - name: Show env vars
         run: |
-          echo 'PATH_PREFIX' $PATH_PREFIX
-          echo 'PREFIX_PATHS' $PREFIX_PATHS
+          echo "PATH_PREFIX ${PATH_PREFIX}"
+          echo "PREFIX_PATHS ${PREFIX_PATHS}"
       - name: Install and Build
         run: |
           npm install
           npm run build
-
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@3.5.7
         with:
