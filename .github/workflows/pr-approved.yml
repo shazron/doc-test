@@ -25,6 +25,11 @@ jobs:
         run: |
           echo "::error::PRs from forks are not supported (Github security issue).%0APRs should be from a branch in the same repo, created by a Contributor."
           exit 1
+      - name: check azure connection string
+        if: secrets.AZURE_CONNECTION_STRING == null
+        run: |
+          echo "::error::Please set the Azure Blob Storage connection string as AZURE_CONNECTION_STRING in Github Secrets"
+          exit 1
 
   echo-state:
     needs: [set-state]
@@ -130,9 +135,10 @@ jobs:
         with:
           enabled-static-website: 'true'
           folder: 'public'
-          connection-string: ${{ secrets.AZURE2_CONNECTION_STRING }}
+          connection-string: ${{ secrets.AZURE_CONNECTION_STRING }}
+
   post-build-dev:
-    needs: [build-dev]
+    needs: [deploy-dev]
     runs-on: ubuntu-latest
     steps:
       - name: 'Comment PR'
@@ -148,7 +154,7 @@ jobs:
             })
 
   post-build-production:
-    needs: [build-production]
+    needs: [deploy-production]
     runs-on: ubuntu-latest
     steps:
       - name: 'Comment PR'
