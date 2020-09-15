@@ -62,6 +62,9 @@ jobs:
             })
 
   build-dev:
+    defaults:
+      run:
+        shell: bash
     needs: [set-state, pre-build-dev]
     runs-on: ubuntu-latest
     steps:
@@ -117,6 +120,9 @@ jobs:
             })
 
   build-production:
+    defaults:
+      run:
+        shell: bash
     needs: [set-state, pre-build-production]
     runs-on: ubuntu-latest
     steps:
@@ -128,6 +134,8 @@ jobs:
         run: |
           npm install
           npm run build
+          mkdir $GITHUB_WORKSPACE/dist
+          mv $GITHUB_WORKSPACE/public $GITHUB_WORKSPACE/dist/$PATH_PREFIX
         env:
           PREFIX_PATHS: true # equivalent to --prefix-paths flag for 'gatsby build'
           PATH_PREFIX: ${{ github.event.repository.name }}
@@ -141,7 +149,7 @@ jobs:
         uses: tibor19/static-website-deploy@v1
         with:
           enabled-static-website: 'true'
-          folder: 'public'
+          folder: 'dist'
           connection-string: ${{ secrets.AZURE_CONNECTION_STRING }}
 
   post-build-production:
