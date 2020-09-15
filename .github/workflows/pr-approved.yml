@@ -1,4 +1,4 @@
-name: pr-approved
+name: PR Approved for Static Site Deploy
 
 on:
   pull_request_review:
@@ -12,8 +12,11 @@ jobs:
       pr_approved: ${{ github.event.review.state == 'approved' }}
       deploy_prod: ${{ contains(github.event.pull_request.labels.*.name, 'deploy') }}
       deploy_dev: ${{ contains(github.event.pull_request.labels.*.name, 'deploy:dev')}}
-      branch_short_ref: ${{ steps.vars.BRANCH_SHORT_REF }}
+      branch_short_ref: ${{ github.event.pull_request.head.ref }}
     steps:
+      - name: Set output vars
+        id: vars
+        run: echo ::set-output name=BRANCH_SHORT_REF::${GITHUB_REF#refs/*/}
       - name: check fork
         # The GH token used when a PR is a fork is read-only, for security reasons
         # (so the forked PR can't steal secrets, for example)
@@ -25,9 +28,6 @@ jobs:
         run: |
           echo "::error::PRs from forks are not supported (Github security issue).%0APRs should be from a branch in the same repo, created by a Contributor."
           exit 1
-      - name: Set output vars
-        id: vars
-        run: echo ::set-output name=BRANCH_SHORT_REF::${GITHUB_REF#refs/*/}
 
   echo-state:
     needs: [set-state]
