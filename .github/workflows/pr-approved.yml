@@ -1,4 +1,4 @@
-name: PR Approved for Static Site Deploy
+name: pr-approved
 
 on:
   pull_request_review:
@@ -14,9 +14,6 @@ jobs:
       deploy_dev: ${{ contains(github.event.pull_request.labels.*.name, 'deploy:dev')}}
       branch_short_ref: ${{ github.event.pull_request.head.ref }}
     steps:
-      - name: Set output vars
-        id: vars
-        run: echo ::set-output name=BRANCH_SHORT_REF::${GITHUB_REF#refs/*/}
       - name: check fork
         # The GH token used when a PR is a fork is read-only, for security reasons
         # (so the forked PR can't steal secrets, for example)
@@ -108,7 +105,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.1 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
+        uses: actions/checkout@v2.3.1
         with:
           persist-credentials: false
       - name: Build
@@ -129,9 +126,11 @@ jobs:
     needs: [build-production]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: echo "deployed (prod)"
-
+      - uses: tibor19/static-website-deploy@v1
+        with:
+          enabled-static-website: 'true'
+          folder: 'public'
+          connection-string: ${{ secrets.AZURE2_CONNECTION_STRING }}
   post-build-dev:
     needs: [build-dev]
     runs-on: ubuntu-latest
